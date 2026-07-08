@@ -26,6 +26,19 @@ This skill assembles a **decision-support visual, not advice.** Always present f
 as-of a timestamp, flag approximations, and state plainly that it is informational and
 that you are not a financial advisor.
 
+## Prerequisites
+
+- **An Interactive Brokers account** (any tier, live or paper) with the **IBKR MCP
+  connector** connected and authorized — the user links their IBKR login to Claude via
+  the connector's OAuth flow (claude.ai → Settings → Connectors, or `/mcp` in Claude
+  Code). The skill only reads market data; it never places orders.
+- **Market-data entitlements follow the account.** Real-time quotes require the user's
+  IBKR market-data subscriptions; without them IBKR serves delayed data, which is fine —
+  timestamp the report either way.
+- **Web search** available in the session, for fundamentals, peers, and catalysts.
+- If the IBKR tools are missing, unauthorized, or time out, do not block: fall back to
+  web-sourced figures and say so in the footer.
+
 ## Files in this skill
 
 - `assets/dashboard_template.html` — the report template. **All content is driven by one

@@ -21,10 +21,11 @@ Live market data comes from the Interactive Brokers (IBKR) connector; fundamenta
 
 ## Prerequisites
 
-1. **Claude Code** (CLI, desktop, or web) with skills enabled.
-2. **The IBKR MCP connector**, connected and authorized — the skill calls `search_contracts`, `get_price_snapshot`, `get_option_parameters`, and `get_option_data` for live quotes, volatility, and the option chain. Without it the skill falls back to web-sourced figures and says so in the report footer.
-3. **Web search** available in the session (used for fundamentals, peer metrics, analyst targets, and catalysts).
-4. An IBKR market-data subscription appropriate for the tickers you review (delayed data works; the report is timestamped either way).
+1. **An Interactive Brokers account** — any tier, live or paper. IBKR Lite/Pro both work; the skill only *reads* market data and never places orders, so no funding or trading permissions are needed beyond market-data access.
+2. **The IBKR MCP connector, connected and authenticated.** Add it in claude.ai → Settings → Connectors (or `/mcp` in an interactive Claude Code session) and complete the OAuth flow with your IBKR credentials. Until it's authorized, the IBKR tools are unavailable and the skill falls back to web-sourced figures (and says so in the report footer). The skill calls `search_contracts`, `get_price_snapshot`, `get_option_parameters`, and `get_option_data`.
+3. **Market-data entitlements follow your IBKR account.** Real-time quotes require the relevant IBKR market-data subscriptions; without them IBKR serves delayed data, which works fine — every report is timestamped either way.
+4. **Claude Code** (CLI, desktop, or web) with skills enabled.
+5. **Web search** available in the session (used for fundamentals, peer metrics, analyst targets, and catalysts).
 
 ## How to use it
 
@@ -52,6 +53,7 @@ Typical runtime is a few minutes; the option-chain scan (per-strike open interes
 - `assets/dashboard_template.html` — the report template; all content is driven by a single `CONFIG` object, the page renders itself
 - `references/data_and_model.md` — the exact IBKR call sequence, the options-positioning interpretation playbook, and the probability-distribution model with a worked example
 - `samples/pltr-dashboard.html` — a real output, generated July 6, 2026
+- `tests/regression.test.js` — 50-test regression suite (probability math, CONFIG rendering contract, docs invariants, sample integrity); run with `node tests/regression.test.js`, no dependencies
 
 ## Disclaimer
 
