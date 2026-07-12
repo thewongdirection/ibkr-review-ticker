@@ -93,10 +93,18 @@ the option-implied odds with the fundamental/positioning picture. State the medi
 ±1σ range, and the direction odds. Keep probabilities summing to ~100.
 
 ### 5 — Render the dashboard
-Copy `assets/dashboard_template.html` to `/mnt/user-data/outputs/<ticker>-dashboard.html`.
+**The deliverable is always one self-contained HTML file the user can open directly in a
+browser.** Do not produce a PDF, image, or any other format unless explicitly asked.
+Copy `assets/dashboard_template.html` to `<ticker>-dashboard.html` in the environment's
+output location:
+- **claude.ai / cloud sessions:** `/mnt/user-data/outputs/`, then `present_files` it.
+- **Local sessions (Claude Code desktop/CLI):** the user's usual reports folder if they
+  have one, otherwise the working directory — then give the user the clickable file path
+  (and deliver the file if the harness supports it).
+
 Fill the `CONFIG` object with everything gathered. The subject ticker is the **first entry
 of `peerOrder`** and is highlighted amber automatically. Replace `__TICKER__` in `<title>`.
-Then `present_files` the result. Keep the post-amble short: a few sentences on the headline
+Keep the post-amble short: a few sentences on the headline
 read (why it's moving, the peer-ranking takeaway, the probability split, the key catalyst),
 then offer obvious follow-ups (refresh with exact chain data; add peers; second curve at
 full IV).
