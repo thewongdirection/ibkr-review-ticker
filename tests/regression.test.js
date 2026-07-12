@@ -369,6 +369,31 @@ test('committed PLTR sample renders end-to-end from its own CONFIG', () => {
   assert(/not investment advice/i.test(s.app.innerHTML), 'sample disclaimer missing');
 });
 
+/* ================= G. credential & session-isolation invariants (51-52) ================= */
+test('no session-bound identifiers or secrets in any tracked file', () => {
+  const files = ['SKILL.md', 'README.md', 'assets/dashboard_template.html',
+    'references/data_and_model.md', 'samples/pltr-dashboard.html', 'tests/regression.test.js'];
+  const NAMESPACED_TOOL = new RegExp('mcp' + '__[0-9a-f-]{8,}', 'i'); // split so this test file can't match itself
+  const badPatterns = [
+    [NAMESPACED_TOOL, 'session-namespaced MCP tool name'],
+    [/\b(ghp|gho|ghs)_[A-Za-z0-9]{20,}/, 'GitHub token'],
+    [/\bAKIA[0-9A-Z]{16}\b/, 'AWS key'],
+    [/-----BEGIN [A-Z ]*PRIVATE KEY-----/, 'private key'],
+    [/\b(U|DU)[0-9]{6,8}\b/, 'IBKR account id'],
+    [/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i, 'UUID (connector/session id)']
+  ];
+  for (const f of files) {
+    const body = read(f);
+    for (const [re, label] of badPatterns) {
+      assert(!re.test(body), `${label} found in ${f}`);
+    }
+  }
+});
+test('SKILL.md forbids account-bound data in outputs; tools referenced generically', () => {
+  assert(/Never write account-bound data/i.test(skillMd), 'account-data guardrail missing');
+  assert(/generic name/i.test(skillMd), 'generic tool-name rule missing');
+});
+
 /* ---------- summary ---------- */
 console.log(`\n# ${passed} passed, ${failed} failed, ${passed + failed} total`);
 if (failed) {

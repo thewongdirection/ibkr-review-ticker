@@ -47,13 +47,23 @@ or just ask naturally — "review NVDA", "why is AMD moving and will it recover"
 
 Typical runtime is a few minutes; the option-chain scan (per-strike open interest) is the slow part and is skipped gracefully if unavailable.
 
+## Security & authentication model
+
+**Cloning this skill grants no access to anyone's brokerage data — including the author's.** The repo contains only instructions, an HTML template, and sample market data:
+
+- **No credentials ship with the skill.** There are no tokens, API keys, session handles, account numbers, or connector identifiers anywhere in this repository or its git history (audited).
+- **Authentication is per-user, at the connector layer.** The skill calls IBKR MCP tools by generic name (`search_contracts`, `get_price_snapshot`, …). Those tools only exist in *your* Claude session after *you* authorize the IBKR connector with *your own* IBKR login via OAuth. Without that grant, the calls simply don't exist and the skill falls back to web data.
+- **Nothing is stored.** The skill never writes tokens or account data to disk, and its reports contain only public market data — never account numbers, positions, or balances.
+
+In short: anyone who checks this skill out must connect their own IBKR account; there is no mechanism by which they could reach the author's.
+
 ## Layout
 
 - `SKILL.md` — the workflow: resolve the ticker, pull live IBKR data, research fundamentals/peers/catalysts, build the probability model, render
 - `assets/dashboard_template.html` — the report template; all content is driven by a single `CONFIG` object, the page renders itself
 - `references/data_and_model.md` — the exact IBKR call sequence, the options-positioning interpretation playbook, and the probability-distribution model with a worked example
 - `samples/pltr-dashboard.html` — a real output, generated July 6, 2026
-- `tests/regression.test.js` — 50-test regression suite (probability math, CONFIG rendering contract, docs invariants, sample integrity); run with `node tests/regression.test.js`, no dependencies
+- `tests/regression.test.js` — 52-test regression suite (probability math, CONFIG rendering contract, docs invariants, sample integrity, credential/session-isolation checks); run with `node tests/regression.test.js`, no dependencies
 
 ## Disclaimer
 

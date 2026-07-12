@@ -108,6 +108,10 @@ full IV).
   sourced chain stats).
 - Never place orders or give personalized buy/sell/allocation recommendations. If the user
   asks "should I buy", give the factual setup and the probability picture, not a directive.
+- **Never write account-bound data into the report or any file**: no account numbers,
+  positions, balances, credentials, tokens, or connector/contract identifiers. Reports
+  contain public market data only — they get shared. Reference IBKR tools by generic name
+  (`get_price_snapshot`), never by a session-specific namespaced name.
 
 ## Design system (keep it)
 Dark slate instrument panel. Three disciplined hues: **cyan** = neutral data accent,
