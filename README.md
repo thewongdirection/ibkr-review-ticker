@@ -54,6 +54,7 @@ Typical runtime is a few minutes; the option-chain scan (per-strike open interes
 - **No credentials ship with the skill.** There are no tokens, API keys, session handles, account numbers, or connector identifiers anywhere in this repository or its git history (audited).
 - **Authentication is per-user, at the connector layer.** The skill calls IBKR MCP tools by generic name (`search_contracts`, `get_price_snapshot`, …). Those tools only exist in *your* Claude session after *you* authorize the IBKR connector with *your own* IBKR login via OAuth. Without that grant, the calls simply don't exist and the skill falls back to web data.
 - **Nothing is stored.** The skill never writes tokens or account data to disk, and its reports contain only public market data — never account numbers, positions, or balances.
+- **Query-only — no trading, no account reads.** The skill operates under a strict allowlist of four market-data tools (`search_contracts`, `get_price_snapshot`, `get_option_parameters`, `get_option_data`). It never calls order-placement or account tools, and the test suite fails if any file ever references one.
 
 In short: anyone who checks this skill out must connect their own IBKR account; there is no mechanism by which they could reach the author's.
 
@@ -63,7 +64,7 @@ In short: anyone who checks this skill out must connect their own IBKR account; 
 - `assets/dashboard_template.html` — the report template; all content is driven by a single `CONFIG` object, the page renders itself
 - `references/data_and_model.md` — the exact IBKR call sequence, the options-positioning interpretation playbook, and the probability-distribution model with a worked example
 - `samples/pltr-dashboard.html` — a real output, generated July 6, 2026
-- `tests/regression.test.js` — 52-test regression suite (probability math, CONFIG rendering contract, docs invariants, sample integrity, credential/session-isolation checks); run with `node tests/regression.test.js`, no dependencies
+- `tests/regression.test.js` — 53-test regression suite (probability math, CONFIG rendering contract, docs invariants, sample integrity, credential/session-isolation checks); run with `node tests/regression.test.js`, no dependencies
 
 ## Disclaimer
 

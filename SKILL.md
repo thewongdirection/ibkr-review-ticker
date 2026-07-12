@@ -112,6 +112,12 @@ full IV).
   positions, balances, credentials, tokens, or connector/contract identifiers. Reports
   contain public market data only — they get shared. Reference IBKR tools by generic name
   (`get_price_snapshot`), never by a session-specific namespaced name.
+- **Strict read-only tool allowlist.** This skill may call exactly four IBKR tools —
+  `search_contracts`, `get_price_snapshot`, `get_option_parameters`, `get_option_data` —
+  all market-data queries. It must never call order tools (`create_order_instruction`,
+  `delete_order_instruction`) or account tools (`get_account_balances`, positions, orders,
+  trades, summary, or portfolio-analytics tools), even if the user asks mid-run; trading
+  and account access are out of scope for this skill entirely.
 
 ## Design system (keep it)
 Dark slate instrument panel. Three disciplined hues: **cyan** = neutral data accent,

@@ -393,6 +393,18 @@ test('SKILL.md forbids account-bound data in outputs; tools referenced generical
   assert(/Never write account-bound data/i.test(skillMd), 'account-data guardrail missing');
   assert(/generic name/i.test(skillMd), 'generic tool-name rule missing');
 });
+test('read-only allowlist: only market-data tools; no order/account tools outside the prohibition', () => {
+  assert(/Strict read-only tool allowlist/i.test(skillMd), 'allowlist guardrail missing');
+  assert(/must never call order tools/i.test(skillMd), 'order-tool prohibition missing');
+  // everywhere except SKILL.md's prohibition, order/account tool names must not appear at all
+  const forbidden = /(create_order|delete_order|order_instruction|get_account_|get_pa_)/;
+  ['README.md', 'assets/dashboard_template.html', 'references/data_and_model.md',
+   'samples/pltr-dashboard.html'].forEach(f =>
+    assert(!forbidden.test(read(f)), `order/account tool reference found in ${f}`));
+  // and SKILL.md's workflow must instruct only the four allowed tools
+  const workflow = skillMd.slice(skillMd.indexOf('## Workflow'), skillMd.indexOf('### 6'));
+  assert(!forbidden.test(workflow), 'workflow section references an order/account tool');
+});
 
 /* ---------- summary ---------- */
 console.log(`\n# ${passed} passed, ${failed} failed, ${passed + failed} total`);
